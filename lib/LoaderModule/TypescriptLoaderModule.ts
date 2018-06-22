@@ -15,6 +15,7 @@
  */
 
 import { Plugin, RuleSetLoader, RuleSetRule } from 'webpack'
+import ThreadPool from '../ThreadPool'
 import WebpackConfigBuilder from '../WebpackConfigBuilder'
 import BuilderConfiguration from '../WebpackConfigBuilderConfiguration'
 import AbstractBabelLoader from './AbstractBabelLoader'
@@ -24,9 +25,9 @@ export default class TypescriptLoaderModule extends AbstractBabelLoader
     public static readonly TEST = /\.ts(x?)$/
     public static readonly TEST_NODE = /node_modules/
 
-    public constructor()
+    public constructor(threadPool?: ThreadPool)
     {
-        super(TypescriptLoaderModule.TEST, [], TypescriptLoaderModule.TEST_NODE)
+        super(TypescriptLoaderModule.TEST, [], TypescriptLoaderModule.TEST_NODE, threadPool)
     }
 
     public make(options: BuilderConfiguration, addPlugin: (plugin: Plugin) => WebpackConfigBuilder): RuleSetRule

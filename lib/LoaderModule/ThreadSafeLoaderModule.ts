@@ -15,11 +15,13 @@
  */
 
 import { Plugin, RuleSetRule } from 'webpack'
+import ThreadPool from '../ThreadPool'
 import WebpackConfigBuilder from '../WebpackConfigBuilder'
 import BuilderConfiguration from '../WebpackConfigBuilderConfiguration'
 import LoaderModule from './LoaderModule'
 
 export default interface ThreadSafeLoaderModule extends LoaderModule
 {
+    readonly threadPool?: ThreadPool
     makeThreadSafe(options: BuilderConfiguration, addPlugin: (plugin: Plugin) => WebpackConfigBuilder): RuleSetRule
 }

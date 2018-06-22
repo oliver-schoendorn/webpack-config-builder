@@ -1,6 +1,6 @@
 {
   "name": "webpack-config-builder",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Helper module to compose webpack configs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

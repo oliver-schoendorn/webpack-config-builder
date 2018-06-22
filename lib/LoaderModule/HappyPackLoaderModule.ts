@@ -49,7 +49,7 @@ export default class HappyPackLoaderModule implements LoaderModule
         const loader = this.loader.makeThreadSafe(options, addPlugin)
         this.use = loader.use
 
-        addPlugin((new HappyPackPlugin(this)).make())
+        addPlugin((new HappyPackPlugin(this, this.loader.threadPool)).make())
 
         return Object.assign({}, loader, {
             loader: 'happypack/loader?id=' + this.id,

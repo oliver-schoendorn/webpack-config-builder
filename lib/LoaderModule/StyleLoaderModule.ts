@@ -14,25 +14,30 @@
  * limitations under the License.
  */
 
-import { Plugin, RuleSetRule } from 'webpack'
+import { Plugin, RuleSetRule, RuleSetUse } from 'webpack'
+import ThreadPool from '../ThreadPool'
 import WebpackConfigBuilder from '../WebpackConfigBuilder'
 import BuilderConfiguration from '../WebpackConfigBuilderConfiguration'
-import AbstractThreadSafeLoaderModule from './AbstractThreadSafeLoaderModule'
+import AbstractLoaderModule from './AbstractLoaderModule'
+import HappyPackLoaderModule from './HappyPackLoaderModule'
+import ThreadSafeLoaderModule from './ThreadSafeLoaderModule'
 
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
-export default class StyleLoaderModule extends AbstractThreadSafeLoaderModule
+export default class StyleLoaderModule extends AbstractLoaderModule implements ThreadSafeLoaderModule
 {
     public static readonly TEST = /\.(scss|sass|css)$/
+    public readonly threadPool?: ThreadPool
 
-    public constructor()
+    public constructor(threadPool?: ThreadPool)
     {
         super(StyleLoaderModule.TEST)
+        this.threadPool = threadPool
     }
 
-    public make(options: BuilderConfiguration, addPlugin: (plugin: Plugin) => WebpackConfigBuilder): RuleSetRule
+    private static makeChildLoaders(options: BuilderConfiguration): RuleSetUse
     {
-        const loaders = [
+        return [
             { loader: 'css-loader', options: {
                 minimize: options.minimizeStyles,
                 importLoaders: 2,
@@ -43,21 +48,109 @@ export default class StyleLoaderModule extends AbstractThreadSafeLoaderModule
                 sourceMap: options.sourceMaps !== false
             } }
         ]
+    }
 
-        this.module.use = options.extractStyles
-            ? ExtractTextPlugin.extract({
+    private makeExtractable(options: BuilderConfiguration, addPlugin: (plugin: Plugin) => WebpackConfigBuilder): RuleSetRule
+    {
+        const plugin = new ExtractTextPlugin({
+            filename: (options.hashOutputFileNames ? '[hash]/' : '') + 'bundle.css',
+            allChunks: true
+        })
+        addPlugin(plugin)
+
+        const loaderStack = StyleLoaderModule.makeChildLoaders(options)
+
+        if (! options.useThreadedLoaders) {
+            console.log('Will created non thread safe text extractor from', JSON.stringify(this.module, null, 4))
+            this.module.loader = plugin.extract({
                 fallback: 'style-loader',
-                use: loaders
+                use: loaderStack
             })
-            : loaders
-
-        if (options.extractStyles) {
-            addPlugin(new ExtractTextPlugin({
-                filename: (options.hashOutputFileNames ? '[hash]/' : '') + 'bundle.css',
-                allChunks: true
-            }))
+            return this.module
         }
 
-        return super.make(options, addPlugin)
+
+        /**
+         * @type {{
+         *       "test": {},
+         *       "loader": "happypack/loader?id=StyleLoaderModule-05"
+         *   }}
+         */
+        this.module = this.makeHappyPackLoaderModule(loaderStack, options, addPlugin)
+        console.log('Will created thread safe text extractor from', JSON.stringify(this.module, null, 4))
+        this.module.loader = plugin.extract({
+            fallback: 'style-loader',
+            use: this.module.loader
+        })
+        return this.module
+    }
+
+    private makeNonExtractable(options: BuilderConfiguration, addPlugin: (plugin: Plugin) => WebpackConfigBuilder): RuleSetRule
+    {
+        this.module.use = [ { loader: 'style-loader' }, ...StyleLoaderModule.makeChildLoaders(options) ]
+
+        if (! options.useThreadedLoaders) {
+            return this.module
+        }
+
+        return this.makeHappyPackLoaderModule(this.module.use, options, addPlugin)
+    }
+
+    private makeHappyPackLoaderModule(
+        loaderStack: RuleSetUse,
+        options: BuilderConfiguration,
+        addPlugin: (plugin: Plugin) => WebpackConfigBuilder
+    ): RuleSetRule
+    {
+        // Note: The wrapper loader will call this.makeThreadSafe() to get
+        //       the loader stack.
+        this.module.use = loaderStack
+
+        const wrapper = new HappyPackLoaderModule(this)
+        return wrapper.make(options, addPlugin)
+    }
+
+    public make(options: BuilderConfiguration, addPlugin: (plugin: Plugin) => WebpackConfigBuilder): RuleSetRule
+    {
+        const response = options.extractStyles
+            ? this.makeExtractable(options, addPlugin)
+            : this.makeNonExtractable(options, addPlugin)
+
+        console.log('Style Loader')
+        console.log(JSON.stringify(response, null, 4))
+
+        return response
+
+        // return this.module
+        //
+        // if (options.useThreadedLoaders) {
+        //     const wrapper = new HappyPackLoaderModule(this)
+        //     this.module = wrapper.make(options, addPlugin)
+        // }
+        //
+        // if (options.extractStyles) {
+        //     const plugin = new ExtractTextPlugin({
+        //         filename: (options.hashOutputFileNames ? '[hash]/' : '') + 'bundle.css',
+        //         allChunks: true
+        //     })
+        //     addPlugin(plugin)
+        //
+        //     console.log('Setting up extract plugin', this.module.use)
+        //
+        //     this.module.use = plugin.extract({
+        //         fallback: 'style-loader',
+        //         use: this.module.use
+        //     })
+        // }
+        //
+        // return this.module
+
+        // return super.make(options, addPlugin)
+    }
+
+    public makeThreadSafe(_options: BuilderConfiguration, _addPlugin: (plugin: Plugin) => WebpackConfigBuilder): RuleSetRule
+    {
+        return this.module
+        // return super.make(options, addPlugin)
     }
 }

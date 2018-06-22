@@ -28,7 +28,7 @@ export interface CommonsChunkPluginOptions
     chunks: string[]
     children: boolean
     deepChildren: boolean
-    async: boolean
+    async: boolean | string
     minSize: number
 }
 

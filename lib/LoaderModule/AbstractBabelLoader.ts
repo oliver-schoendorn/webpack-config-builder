@@ -14,12 +14,21 @@
  * limitations under the License.
  */
 
-import { RuleSetLoader } from 'webpack'
+import { RuleSetLoader, RuleSetUse } from 'webpack'
+import ThreadPool from '../ThreadPool'
 import BuilderConfiguration from '../WebpackConfigBuilderConfiguration'
 import AbstractThreadSafeLoaderModule from './AbstractThreadSafeLoaderModule'
 
 export default abstract class AbstractBabelLoader extends AbstractThreadSafeLoaderModule
 {
+    public readonly threadPool?: ThreadPool
+
+    protected constructor(test: RegExp, use?: RuleSetUse, exclude?: RegExp, threadPool?: ThreadPool)
+    {
+        super(test, use, exclude)
+        this.threadPool = threadPool
+    }
+
     protected static makeBabelLoader(options: BuilderConfiguration): RuleSetLoader
     {
         const loader = {
@@ -29,7 +38,7 @@ export default abstract class AbstractBabelLoader extends AbstractThreadSafeLoad
                 cacheDirectory: options.useBabelCache ? options.cacheDirectory : false,
                 presets: [
                     [ 'env', {
-                        debug: true,
+                        debug: false,
                         targets: { browsers: AbstractBabelLoader.makeBabelLoaderEnvTargetConfig(options) }
                     }],
                     'react',

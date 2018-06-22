@@ -18,6 +18,7 @@ export * from './WebpackConfigBuilder'
 
 export { default as Config } from './WebpackConfigBuilderConfiguration'
 export { default as Entry } from './Entry'
+export { default as ThreadPool } from './ThreadPool'
 export { default as FileLoaderModule } from './LoaderModule/FileLoaderModule'
 export { default as FontLoaderModule } from './LoaderModule/FontLoaderModule'
 export { default as ImageLoaderModule } from './LoaderModule/ImageLoaderModule'

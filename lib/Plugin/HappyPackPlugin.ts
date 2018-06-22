@@ -16,25 +16,33 @@
 
 import { Plugin, RuleSetUse } from 'webpack'
 import HappyPackLoaderModule from '../LoaderModule/HappyPackLoaderModule'
+import ThreadPool from '../ThreadPool'
 const HappyLoader = require('happypack')
 
 export default class HappyPackPlugin
 {
     public readonly id: string
     private readonly loaders: RuleSetUse
+    private readonly threadPool?: ThreadPool
 
-    public constructor(loader: HappyPackLoaderModule)
+    public constructor(loader: HappyPackLoaderModule, threadPool?: ThreadPool)
     {
         this.id = loader.id
         this.loaders = loader.getLoaderIds()
+        this.threadPool = threadPool
     }
 
     public make(): Plugin
     {
-        return new HappyLoader({
+        const options = {
             id: this.id,
-            threads: 2,
             loaders: this.loaders instanceof Array ? this.loaders : [ this.loaders ]
-        })
+        } as { id: string, loaders: any[], threadPool?: object }
+
+        if (this.threadPool) {
+            options.threadPool = this.threadPool.make()
+        }
+
+        return new HappyLoader(options)
     }
 }
