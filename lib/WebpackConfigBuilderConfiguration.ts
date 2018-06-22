@@ -50,7 +50,8 @@ export default interface BuilderConfiguration
         open?: boolean
     } | {
         mode: 'static'
-        file: string
+        file: string,
+        open?: boolean
     },
     html: false | {
         filename?: string

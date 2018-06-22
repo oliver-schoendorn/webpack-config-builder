@@ -52,7 +52,8 @@ export default class HappyPackLoaderModule implements LoaderModule
         addPlugin((new HappyPackPlugin(this)).make())
 
         return Object.assign({}, loader, {
-            use: 'happypack/loader?id=' + this.id
+            loader: 'happypack/loader?id=' + this.id,
+            use: undefined
         })
     }
 }

@@ -22,5 +22,5 @@ node_modules/
 # Yarn Integrity file
 .yarn-integrity
 
-# Typescript sources
-lib/
+# Ignore dist directory as it gets generated during install
+dist/

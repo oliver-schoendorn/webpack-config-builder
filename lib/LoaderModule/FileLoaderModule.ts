@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import AbstractThreadSafeLoaderModule from './AbstractThreadSafeLoaderModule'
+import AbstractLoaderModule from './AbstractLoaderModule'
 
-export default class FileLoaderModule extends AbstractThreadSafeLoaderModule
+export default class FileLoaderModule extends AbstractLoaderModule
 {
     protected outputDirectory: string
 

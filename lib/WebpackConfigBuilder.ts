@@ -166,7 +166,7 @@ class WebpackConfigBuilder
         ]
 
         if (useThreadedLoaders) {
-            plugins.push(new ForkTsCheckerWebpackPlugin())
+            plugins.push(new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true }))
         }
 
         if (minimizeJs) {
@@ -211,6 +211,7 @@ class WebpackConfigBuilder
                 : {
                     analyzerMode: 'static',
                     reportFilename: analyzeBundle.file,
+                    openAnalyzer: analyzeBundle.open
                 }
             ))
         }

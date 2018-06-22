@@ -1,6 +1,6 @@
 {
   "name": "webpack-config-builder",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Helper module to compose webpack configs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,7 +14,7 @@
   "license": "Apache-2.0",
   "repository": "github:oliver-schoendorn/webpack-config-builder",
   "devDependencies": {
-    "@types/node": "^9.6.7",
+    "@types/node": "^10.3.3",
     "@types/webpack": "^4.4.1",
     "@types/webpack-env": "^1.13.6",
     "rimraf": "^2.6.2",
@@ -53,6 +53,6 @@
     "webpack": "^3.12.0",
     "webpack-bundle-analyzer": "^2.13.1",
     "webpack-dev-server": "^2.11.2",
-    "webpack-sources": "^1.0.1"
+    "webpack-sources": "1.0.1"
   }
 }

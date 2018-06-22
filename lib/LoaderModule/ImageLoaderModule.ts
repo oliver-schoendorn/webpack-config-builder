@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Plugin, RuleSetRule } from 'webpack'
+import { Plugin, RuleSetLoader, RuleSetRule } from 'webpack'
 import WebpackConfigBuilder from '../WebpackConfigBuilder'
 import BuilderConfiguration from '../WebpackConfigBuilderConfiguration'
 import FileLoaderModule from './FileLoaderModule'
@@ -30,9 +30,10 @@ export default class ImageLoaderModule extends FileLoaderModule
 
     public make(options: BuilderConfiguration, addPlugin: (plugin: Plugin) => WebpackConfigBuilder): RuleSetRule
     {
-        this.module.options = {
+        (this.module.use as RuleSetLoader).options = {
             name: this.outputDirectory + (options.hashOutputFileNames ? '[hash]' : '[name]') + '.[ext]'
         }
+
         return super.make(options, addPlugin)
     }
 }
