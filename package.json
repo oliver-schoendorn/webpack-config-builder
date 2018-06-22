@@ -1,6 +1,6 @@
 {
   "name": "webpack-config-builder",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Helper module to compose webpack configs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -13,15 +13,10 @@
   "author": "Oliver Schöndorn <info@oswebstyle.de>",
   "license": "Apache-2.0",
   "repository": "github:oliver-schoendorn/webpack-config-builder",
-  "devDependencies": {
+  "dependencies": {
     "@types/node": "^10.3.3",
     "@types/webpack": "^4.4.1",
     "@types/webpack-env": "^1.13.6",
-    "rimraf": "^2.6.2",
-    "source-map": "^0.7.3",
-    "typescript": "^2.9.2"
-  },
-  "dependencies": {
     "@sentry/webpack-plugin": "^1.5.2",
     "ajv": "^6.5.1",
     "babel-core": "^6.23.1",
@@ -34,8 +29,10 @@
     "babel-preset-minify": "^0.3.0",
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-2": "^6.22.0",
+    "css-loader": "^0.28.11",
     "duplicate-package-checker-webpack-plugin": "^2.1.0",
     "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^1.1.11",
     "fork-ts-checker-webpack-plugin": "^0.4.2",
     "happypack": "^5.0.0",
     "html-webpack-plugin": "^3.2.0",
@@ -44,7 +41,9 @@
     "react-hot-loader": "^4.3.2",
     "resolve-url": "^0.2.1",
     "resolve-url-loader": "^2.2.1",
+    "rimraf": "^2.6.2",
     "sass-loader": "^6.0.6",
+    "source-map": "^0.7.3",
     "speed-measure-webpack-plugin": "^1.2.2",
     "style-loader": "^0.20.2",
     "ts-loader": "^3.5.0",

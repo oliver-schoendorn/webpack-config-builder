@@ -61,7 +61,6 @@ export default class StyleLoaderModule extends AbstractLoaderModule implements T
         const loaderStack = StyleLoaderModule.makeChildLoaders(options)
 
         if (! options.useThreadedLoaders) {
-            console.log('Will created non thread safe text extractor from', JSON.stringify(this.module, null, 4))
             this.module.loader = plugin.extract({
                 fallback: 'style-loader',
                 use: loaderStack
@@ -77,7 +76,6 @@ export default class StyleLoaderModule extends AbstractLoaderModule implements T
          *   }}
          */
         this.module = this.makeHappyPackLoaderModule(loaderStack, options, addPlugin)
-        console.log('Will created thread safe text extractor from', JSON.stringify(this.module, null, 4))
         this.module.loader = plugin.extract({
             fallback: 'style-loader',
             use: this.module.loader
@@ -112,45 +110,13 @@ export default class StyleLoaderModule extends AbstractLoaderModule implements T
 
     public make(options: BuilderConfiguration, addPlugin: (plugin: Plugin) => WebpackConfigBuilder): RuleSetRule
     {
-        const response = options.extractStyles
+        return options.extractStyles
             ? this.makeExtractable(options, addPlugin)
             : this.makeNonExtractable(options, addPlugin)
-
-        console.log('Style Loader')
-        console.log(JSON.stringify(response, null, 4))
-
-        return response
-
-        // return this.module
-        //
-        // if (options.useThreadedLoaders) {
-        //     const wrapper = new HappyPackLoaderModule(this)
-        //     this.module = wrapper.make(options, addPlugin)
-        // }
-        //
-        // if (options.extractStyles) {
-        //     const plugin = new ExtractTextPlugin({
-        //         filename: (options.hashOutputFileNames ? '[hash]/' : '') + 'bundle.css',
-        //         allChunks: true
-        //     })
-        //     addPlugin(plugin)
-        //
-        //     console.log('Setting up extract plugin', this.module.use)
-        //
-        //     this.module.use = plugin.extract({
-        //         fallback: 'style-loader',
-        //         use: this.module.use
-        //     })
-        // }
-        //
-        // return this.module
-
-        // return super.make(options, addPlugin)
     }
 
     public makeThreadSafe(_options: BuilderConfiguration, _addPlugin: (plugin: Plugin) => WebpackConfigBuilder): RuleSetRule
     {
         return this.module
-        // return super.make(options, addPlugin)
     }
 }
