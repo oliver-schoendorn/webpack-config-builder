@@ -1,6 +1,6 @@
 {
   "name": "@oliver-schoendorn/webpack-config-builder",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Helper module to compose webpack configs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,10 +14,11 @@
   "license": "Apache-2.0",
   "repository": "github:oliver-schoendorn/webpack-config-builder",
   "dependencies": {
+    "@sentry/cli": "^1.33.0",
+    "@sentry/webpack-plugin": "^1.5.2",
     "@types/node": "^10.3.3",
     "@types/webpack": "^4.4.1",
     "@types/webpack-env": "^1.13.6",
-    "@sentry/webpack-plugin": "^1.5.2",
     "ajv": "^6.5.1",
     "babel-core": "^6.23.1",
     "babel-loader": "^7.1.2",
