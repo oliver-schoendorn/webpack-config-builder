@@ -60,6 +60,33 @@ class WebpackConfigBuilder
         output: {
             path: './dist/',
             publicPath: '/'
+        },
+        stats: {
+            assets: true,
+            cached: true,
+            cachedAssets: true,
+            children: false,
+            chunks: true,
+            chunkModules: false,
+            chunkOrigins: false,
+            colors: true,
+            depth: false,
+            entrypoints: true,
+            env: true,
+            errors: true,
+            errorDetails: true,
+            hash: true,
+            modules: false,
+            moduleTrace: false,
+            performance: true,
+            providedExports: false,
+            publicPath: true,
+            reasons: true,
+            source: true,
+            timings: true,
+            usedExports: false,
+            version: true,
+            warnings: true
         }
     }
 
@@ -112,7 +139,8 @@ class WebpackConfigBuilder
                 filename: (hashOutputFileNames ? '[hash]/' : '') + 'bundle.[name].js',
                 chunkFilename: (hashOutputFileNames ? '[hash]/' : '') + 'chunk.[name].js',
                 ...output
-            }
+            },
+            stats: this.options.stats
         }
 
         if (useWebpackDevServer) {
@@ -166,7 +194,9 @@ class WebpackConfigBuilder
         ]
 
         if (useThreadedLoaders) {
-            plugins.push(new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true }))
+            plugins.push(new ForkTsCheckerWebpackPlugin({
+                checkSyntacticErrors: true
+            }))
         }
 
         if (minimizeJs) {
@@ -194,11 +224,11 @@ class WebpackConfigBuilder
         }
 
         if (includeSentry) {
-            plugins.push(new SentryCliPlugin({
+            plugins.push(new SentryCliPlugin(Object.assign({
                 include: '.',
                 ignore: ['node_modules'],
                 configFile: 'sentry.properties',
-            }))
+            }, includeSentry === true ? {} : includeSentry)))
         }
 
         if (analyzeBundle) {

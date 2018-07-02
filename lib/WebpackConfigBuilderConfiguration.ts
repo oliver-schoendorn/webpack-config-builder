@@ -36,14 +36,15 @@ export default interface BuilderConfiguration
     extractStyles: boolean
     minimizeStyles: boolean
     minimizeJs: boolean
-    includeSentry: boolean
+    includeSentry: boolean | {
+        debug?: boolean
+        release?: string
+    }
     environmentVariables: { [key: string]: any }
     useBabelCache: boolean
     cacheDirectory?: string
     extractI18nMessages: false | string
-    useThreadedLoaders: false | {
-        workerCount: number
-    },
+    useThreadedLoaders: boolean,
     analyzeBundle: false | {
         mode: 'server'
         port: number,
@@ -60,5 +61,96 @@ export default interface BuilderConfiguration
     output: {
         path: string,
         publicPath: string
-    }
+    },
+    stats?: boolean | 'errors-only' | 'minimal' | 'none' | 'normal' | 'verbose' | Partial<{
+        // Add asset Information
+        assets: boolean
+
+        // Sort assets by a field
+        // You can reverse the sort with `!field`.
+        assetsSort: string
+
+        // Add information about cached (not built) modules
+        cached: boolean
+
+        // Show cached assets (setting this to `false` only shows emitted files)
+        cachedAssets: boolean
+
+        // Add children information
+        children: boolean
+
+        // Add chunk information (setting this to `false` allows for a less verbose output)
+        chunks: boolean
+
+        // Add built modules information to chunk information
+        chunkModules: boolean
+
+        // Add the origins of chunks and chunk merging info
+        chunkOrigins: boolean
+
+        // Sort the chunks by a field
+        // You can reverse the sort with `!field`. Default is `id`.
+        chunksSort: string
+
+        // `webpack --colors` equivalent
+        colors: boolean
+
+        // Display the distance from the entry point for each module
+        depth: boolean // | number -- probably a bug in the webpack ambient ts definition
+
+        // Display the entry points with the corresponding bundles
+        entrypoints: boolean
+
+        // Add --env information
+        env: boolean
+
+        // Add errors
+        errors: boolean
+
+        // Add details to errors (like resolving log)
+        errorDetails: boolean
+
+        // Add the hash of the compilation
+        hash: boolean
+
+        // Set the maximum number of modules to be shown
+        maxModules: number
+
+        // Add built modules information
+        modules: boolean
+
+        // Sort the modules by a field
+        // You can reverse the sort with `!field`. Default is `id`.
+        modulesSort: string
+
+        // Show dependencies and origin of warnings/errors (since webpack 2.5.0)
+        moduleTrace: boolean
+
+        // Show performance hint when file size exceeds `performance.maxAssetSize`
+        performance: boolean
+
+        // Show the exports of the modules
+        providedExports: boolean
+
+        // Add public path information
+        publicPath: boolean
+
+        // Add information about the reasons why modules are included
+        reasons: boolean
+
+        // Add the source code of modules
+        source: boolean
+
+        // Add timing information
+        timings: boolean
+
+        // Show which exports of a module are used
+        usedExports: boolean
+
+        // Add webpack version information
+        version: boolean
+
+        // Add warnings
+        warnings: boolean
+    }>
 }
