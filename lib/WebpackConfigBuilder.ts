@@ -35,6 +35,7 @@ const SentryCliPlugin = require('@sentry/webpack-plugin')
 const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
+const StatsWriterPlugin = require('webpack-stats-plugin').StatsWriterPlugin
 
 class WebpackConfigBuilder
 {
@@ -178,7 +179,8 @@ class WebpackConfigBuilder
             hotModuleReplacement,
             includeSentry,
             analyzeBundle,
-            html
+            html,
+            outputStats
         } = this.options
 
         const plugins: Plugin[] = [
@@ -244,6 +246,13 @@ class WebpackConfigBuilder
                     openAnalyzer: analyzeBundle.open
                 }
             ))
+        }
+
+        if (outputStats) {
+            plugins.push(new StatsWriterPlugin({
+                filename: outputStats,
+                fields: [ 'hash', 'version', 'assetsByChunkName' ]
+            }))
         }
 
         return plugins

@@ -62,6 +62,7 @@ export default interface BuilderConfiguration
         path: string,
         publicPath: string
     },
+    outputStats?: false | string
     stats?: boolean | 'errors-only' | 'minimal' | 'none' | 'normal' | 'verbose' | Partial<{
         // Add asset Information
         assets: boolean
