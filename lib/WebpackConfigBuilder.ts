@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import SentryPlugin from './Plugin/Sentry/SentryPlugin'
 import BuilderConfiguration from './WebpackConfigBuilderConfiguration'
 import {
     Configuration,
@@ -31,7 +32,6 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const MinifyPlugin = require('babel-minify-webpack-plugin')
 const babelPresetMinify = require('babel-preset-minify')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const SentryCliPlugin = require('@sentry/webpack-plugin')
 const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
@@ -226,11 +226,7 @@ class WebpackConfigBuilder
         }
 
         if (includeSentry) {
-            plugins.push(new SentryCliPlugin(Object.assign({
-                include: '.',
-                ignore: ['node_modules'],
-                configFile: 'sentry.properties',
-            }, includeSentry === true ? {} : includeSentry)))
+            plugins.push(new SentryPlugin(includeSentry))
         }
 
         if (analyzeBundle) {

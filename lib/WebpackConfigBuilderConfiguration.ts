@@ -15,6 +15,7 @@
  */
 
 import { Options } from 'webpack'
+import { SentryPluginOptions } from './Plugin/Sentry/SentryPlugin'
 
 export default interface BuilderConfiguration
 {
@@ -36,10 +37,7 @@ export default interface BuilderConfiguration
     extractStyles: boolean
     minimizeStyles: boolean
     minimizeJs: boolean
-    includeSentry: boolean | {
-        debug?: boolean
-        release?: string
-    }
+    includeSentry: false | SentryPluginOptions
     environmentVariables: { [key: string]: any }
     useBabelCache: boolean
     cacheDirectory?: string

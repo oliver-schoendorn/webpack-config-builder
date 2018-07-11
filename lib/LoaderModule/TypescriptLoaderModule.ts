@@ -25,6 +25,18 @@ export default class TypescriptLoaderModule extends AbstractBabelLoader
     public static readonly TEST = /\.ts(x?)$/
     public static readonly TEST_NODE = /node_modules/
 
+    private _configPath?: string
+
+    get configPath(): string | undefined
+    {
+        return this._configPath
+    }
+
+    set configPath(value: string | undefined)
+    {
+        this._configPath = value
+    }
+
     public constructor(threadPool?: ThreadPool)
     {
         super(TypescriptLoaderModule.TEST, [], TypescriptLoaderModule.TEST_NODE, threadPool)

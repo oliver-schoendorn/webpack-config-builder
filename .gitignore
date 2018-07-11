@@ -24,3 +24,7 @@ node_modules/
 
 # Build results
 dist/
+test
+.babelrc
+.sentryclirc
+/webpack.config.js

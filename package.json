@@ -1,6 +1,6 @@
 {
   "name": "@oliver-schoendorn/webpack-config-builder",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Helper module to compose webpack configs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,14 +8,13 @@
     "postinstall": "rimraf ./dist/* && tsc",
     "build": "tsc",
     "prebuild": "rimraf ./dist/*",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "rimraf ./test/out/*; babel-node ./node_modules/.bin/webpack --verbose"
   },
   "author": "Oliver Schöndorn <info@oswebstyle.de>",
   "license": "Apache-2.0",
   "repository": "github:oliver-schoendorn/webpack-config-builder",
   "dependencies": {
     "@sentry/cli": "^1.33.0",
-    "@sentry/webpack-plugin": "^1.5.2",
     "@types/node": "^10.3.3",
     "@types/webpack": "^4.4.1",
     "@types/webpack-env": "^1.13.6",
@@ -55,5 +54,12 @@
     "webpack-dev-server": "^2.11.2",
     "webpack-sources": "1.0.1",
     "webpack-stats-plugin": "^0.2.1"
+  },
+  "devDependencies": {
+    "@types/react": "^16.4.6",
+    "@types/react-dom": "^16.0.6",
+    "babel-cli": "^6.26.0",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1"
   }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export * from './WebpackConfigBuilder'
+import WebpackConfigBuilder from './WebpackConfigBuilder'
 
 export { default as Config } from './WebpackConfigBuilderConfiguration'
 export { default as Entry } from './Entry'
@@ -26,3 +26,5 @@ export { default as JavascriptLoaderModule } from './LoaderModule/JavascriptLoad
 export { default as TypescriptLoaderModule } from './LoaderModule/TypescriptLoaderModule'
 export { default as StyleLoaderModule } from './LoaderModule/StyleLoaderModule'
 export { default as CommonsChunkPlugin } from './Plugin/CommonsChunkPlugin'
+export { default as SentryPlugin } from './Plugin/Sentry/SentryPlugin'
+export default WebpackConfigBuilder
