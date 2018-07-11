@@ -15,12 +15,11 @@
  */
 
 import { loader } from 'webpack'
-import { RawSourceMap } from 'uglify-js/node_modules/source-map'
 
 const loader: loader.Loader = function sentryLoader(
     this: loader.LoaderContext,
     _: string | Buffer | void | undefined,
-    sourceMap: RawSourceMap | undefined
+    sourceMap: any | undefined
 )
 {
     const callback = this.async()
