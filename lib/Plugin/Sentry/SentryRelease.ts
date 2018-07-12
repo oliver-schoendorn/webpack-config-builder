@@ -73,7 +73,8 @@ export default class SentryRelease
             return sentryHelper.uploadSourceMaps(
                     gitDetails.version,
                     options.uploadSource,
-                    options.urlPrefix,
+                    options.pathPrefix,
+                    options.stripPathPrefix,
                     options.ignore,
                     options.ignoreFiles,
                     options.additionalExtensions,

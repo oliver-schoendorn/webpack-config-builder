@@ -42,7 +42,8 @@ export default class SentryHelper
     public uploadSourceMaps(
         release: string,
         source: string,
-        urlPrefix: string,
+        pathPrefix: string,
+        stripPathPrefix: string,
         ignore: string[],
         ignoreFiles: string[],
         additionalExtensions: string[],
@@ -50,15 +51,15 @@ export default class SentryHelper
         validateSourceMaps: boolean
     ): Promise<string>
     {
-        return this.execute(
-            `releases files ${release} upload-sourcemaps ${source} ` +
-            `--url-prefix=${urlPrefix} ` +
-            this.parametrize('--ignore', ignore) + ' ' +
-            this.parametrize('--ignore-file', ignoreFiles) + ' ' +
-            this.parametrize('--ext', additionalExtensions) +
-            (rewriteSourceMaps && ' --rewrite') +
-            (validateSourceMaps && ' --validate')
-        )
+        return this.execute(`releases files ${release} upload-sourcemaps ${source}`, {
+            '--url-prefix': pathPrefix,
+            '--strip-prefix': stripPathPrefix,
+            '--ignore': ignore,
+            '--ignore-file': ignoreFiles,
+            '--ext': additionalExtensions,
+            '--rewrite': rewriteSourceMaps,
+            '--validate': validateSourceMaps
+        })
     }
 
     public finalize(release: string): Promise<string>
@@ -71,13 +72,42 @@ export default class SentryHelper
         return this.execute(`releases deploys ${release} new -e ${environment} -t ${timeElapsed*1000}`)
     }
 
-    private parametrize(parameterName: string, parameterValues: string[]): string
+    private execute(args: string, parameters: { [key: string]: boolean | string | string[] } = {}): Promise<string>
     {
-        return parameterValues.map(parameterValue => `${parameterName} ${parameterValue}`).join(' ')
+        const parsedParameters = this.parseParameters(parameters)
+        console.log(`SentryHelper::execute("${args.split(' ').concat(parsedParameters).join(' ')}", true)`)
+        return this.cli.execute(args.split(' ').concat(parsedParameters), this.live)
     }
 
-    private execute(args: string): Promise<string>
+    private parseParameters(parameters: { [key: string]: boolean | string | string[] }): string[]
     {
-        return this.cli.execute(args.split(' '), this.live)
+        const response: string[] = []
+        Object.keys(parameters)
+            .map(parameterKey => {
+                const parameterValue = parameters[parameterKey]
+                const parsedValues = this.parseParameter(parameterKey, parameterValue)
+                if (parsedValues) {
+                    parsedValues.map(parsedValue => response.push(parsedValue))
+                }
+            })
+
+        return response
+    }
+
+    private parseParameter(parameterKey: string, parameterValue: string | string[] | boolean): string[] | null
+    {
+        if (parameterValue instanceof Array && parameterValue.length > 0) {
+            return parameterValue.map(value => `${parameterKey}=${value}`)
+        }
+
+        if (typeof parameterValue === 'string' && parameterValue !== '') {
+            return [ `${parameterKey}=${parameterValue}` ]
+        }
+
+        if (parameterValue === true) {
+            return [ `${parameterKey}` ]
+        }
+
+        return null
     }
 }

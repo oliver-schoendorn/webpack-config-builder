@@ -25,7 +25,8 @@ export interface SentryPluginOptions
 {
     environment: string
     uploadSource: string
-    urlPrefix: string
+    pathPrefix: string
+    stripPathPrefix: string
     ignore: string[]
     ignoreFiles: string[]
     additionalExtensions: string[]
@@ -38,12 +39,13 @@ export default class SentryPlugin implements Plugin
     private readonly options: SentryPluginOptions
     private release?: SentryRelease
 
-    public constructor(options: Partial<SentryPluginOptions>)
+    public constructor(options: Partial<SentryPluginOptions> = {})
     {
         this.options = Object.assign({
             environment: process.env.ENV || 'undefined',
             uploadSource: '.',
-            urlPrefix: '~/',
+            pathPrefix: '~/',
+            stripPathPrefix: '',
             ignore: [ 'node_modules' ],
             ignoreFiles: [],
             additionalExtensions: [],
