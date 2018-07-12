@@ -1,6 +1,6 @@
 {
   "name": "@oliver-schoendorn/webpack-config-builder",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Helper module to compose webpack configs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
