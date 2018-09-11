@@ -17,7 +17,7 @@
 import SentryPlugin from './Plugin/Sentry/SentryPlugin'
 import BuilderConfiguration from './WebpackConfigBuilderConfiguration'
 import {
-    Configuration,
+    Configuration as WebpackConfiguration,
     DefinePlugin,
     Entry as WebpackEntry,
     HotModuleReplacementPlugin,
@@ -36,6 +36,8 @@ const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 const StatsWriterPlugin = require('webpack-stats-plugin').StatsWriterPlugin
+
+type Configuration = WebpackConfiguration & { devServer?: { [key: string]: any } }
 
 class WebpackConfigBuilder
 {
