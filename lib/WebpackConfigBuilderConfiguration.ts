@@ -42,7 +42,8 @@ export default interface BuilderConfiguration
     useBabelCache: boolean
     cacheDirectory?: string
     extractI18nMessages: false | string
-    useThreadedLoaders: boolean,
+    useThreadedLoaders: boolean
+    forkTsCheckerMemoryLimit?: number
     analyzeBundle: false | {
         mode: 'server'
         port: number,

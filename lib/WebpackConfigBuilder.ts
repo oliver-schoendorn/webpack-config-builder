@@ -176,6 +176,7 @@ class WebpackConfigBuilder
     {
         const {
             useThreadedLoaders,
+            forkTsCheckerMemoryLimit,
             minimizeJs,
             useWebpackDevServer,
             hotModuleReplacement,
@@ -199,7 +200,8 @@ class WebpackConfigBuilder
 
         if (useThreadedLoaders) {
             plugins.push(new ForkTsCheckerWebpackPlugin({
-                checkSyntacticErrors: true
+                checkSyntacticErrors: true,
+                memoryLimit: forkTsCheckerMemoryLimit
             }))
         }
 
