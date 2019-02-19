@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Compiler, Plugin, RuleSetRule, Configuration, default as webpack } from 'webpack'
+import {Compiler, Plugin, RuleSetRule, Configuration, default as webpack } from 'webpack'
 import { resolve as resolvePath } from 'path'
 import Compilation = webpack.compilation.Compilation
 import SentryRelease from './SentryRelease'
@@ -48,7 +48,7 @@ export default class SentryPlugin implements Plugin
             stripPathPrefix: '',
             ignore: [ 'node_modules' ],
             ignoreFiles: [],
-            additionalExtensions: [],
+            additionalExtensions: [ 'map' ],
             rewriteSourceMaps: true,
             validateSourceMaps: true
         }, options)
@@ -64,11 +64,7 @@ export default class SentryPlugin implements Plugin
         this.release = new SentryRelease(new SentryHelper(), new GitHelper())
 
         if ('module' in compiler.options && typeof compiler.options.module === 'object') {
-            const newEntry = this.addEntry(compiler.options.entry)
-            console.log({ label: 'new entry', newEntry })
-            console.log('')
-
-            compiler.options.entry = newEntry //this.addEntry(compiler.options.entry)
+            compiler.options.entry = this.addEntry(compiler.options.entry)
             compiler.options.module.rules.push(this.makeLoaderRuleSet(this.release.create()))
 
             // afterEmit hook
@@ -85,12 +81,10 @@ export default class SentryPlugin implements Plugin
     {
         return {
             test: /SentryEntryDummy\.js$/,
-            use: [
-                {
-                    loader: resolvePath(__dirname, 'SentryLoader.js'),
-                    options: { release, options: this.options },
-                },
-            ],
+            use: [{
+                loader: resolvePath(__dirname, 'SentryLoader.js'),
+                options: { release, options: this.options },
+            }],
         }
     }
 
@@ -122,13 +116,11 @@ export default class SentryPlugin implements Plugin
         return entry
     }
 
-    private afterEmit = (_compilation: Compilation, resolve: () => void) =>
+    private afterEmit = (compilation: Compilation, resolve: () => void) =>
     {
-        this.release!.finalize(this.options)
-            .then(() => {
-                console.log('Completed sentry plugin execution')
-                resolve()
-            })
-            .catch(error => _compilation.errors.push(error))
+        this.release!.finalize(this.options, compilation).then(
+            resolve,
+            error => compilation.errors.push(error)
+        )
     }
 }

@@ -18,6 +18,7 @@ import SentryHelper from './SentryHelper'
 import GitHelper from './GitHelper'
 import { performance } from 'perf_hooks'
 import { SentryPluginOptions } from './SentryPlugin'
+import { compilation } from 'webpack'
 
 interface GitDetails
 {
@@ -66,13 +67,15 @@ export default class SentryRelease
         })
     }
 
-    public finalize(options: SentryPluginOptions): Promise<string>
+    public finalize(options: SentryPluginOptions, compilation: compilation.Compilation): Promise<string>
     {
         const { sentryHelper } = this
+        const uploadSource = options.uploadSource.replace('[hash]', compilation.hash!)
+
         return this.gitDetails.then(gitDetails => {
             return sentryHelper.uploadSourceMaps(
                     gitDetails.version,
-                    options.uploadSource,
+                    uploadSource,
                     options.pathPrefix,
                     options.stripPathPrefix,
                     options.ignore,
